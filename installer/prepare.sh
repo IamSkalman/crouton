@@ -18,6 +18,15 @@ if [ -n "$SETOPTIONS" ]; then
     set $SETOPTIONS
 fi
 
+# if netsurf-gtk is not available (in certain debian and kali releases)
+if install netsurf-gtk; then
+    netsurf='/usr/bin/netsurf-gtk'
+    for link in x-www-browser gnome-www-browser; do
+        if ! update-alternatives --query "$link" | grep -q "$netsurf"; then
+            update-alternatives --install "/usr/bin/$link" "$link" "$netsurf" 10
+        fi
+    done
+
 # We need all paths to do administrative things
 export PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
 
